@@ -1,0 +1,39 @@
+# deployment.yaml - read-only, per the capstone brief's own fallback
+# ("No Kubernetes cluster: nobody has one this week; the read-only
+# deployment.yaml plus a written scaling scenario satisfies Tuesday's
+# requirement. Do not invent a live cluster"). Nothing in this repo applies
+# or runs this manifest.
+#
+# livenessProbe points at GET /health -- the one route app/main.py leaves
+# unprotected specifically so an orchestrator never needs credentials to
+# ask "are you alive?".
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: afyaplus-platform
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: afyaplus-platform
+  template:
+    metadata:
+      labels:
+        app: afyaplus-platform
+    spec:
+      containers:
+        - name: afyaplus-platform
+          image: afyaplus-platform:1.0.0
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: afyaplus-platform-secrets # JWT_SECRET, OPENAI_API_KEY -- never in the image
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
