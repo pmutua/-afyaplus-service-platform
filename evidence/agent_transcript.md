@@ -36,6 +36,8 @@ HTTP 200
 }
 ```
 
+![POST /ask-logistics multi-tool success](../screenshots/d4-02-ask-logistics-multitool-success.png)
+
 Verified correct against `mcp_server/clinics.json`: C02 (8 units) and C04
 (0 units) are the only clinics below the reorder threshold of 10, and
 C01->C02 (16.5 km at 40 km/h) is indeed the nearer of the two ETAs the
@@ -65,6 +67,8 @@ HTTP 200
 }
 ```
 
+![POST /ask-logistics honest failure on a price question](../screenshots/d4-03-ask-logistics-honest-failure.png)
+
 `logs/mcp.log` for this window shows only a `ListToolsRequest` and no
 `CallToolRequest` — the agent inspected what was available and correctly
 concluded no tool call would help, rather than guessing with one.
@@ -77,3 +81,9 @@ $ curl -i -X POST http://127.0.0.1:8000/ask-logistics -H 'Content-Type: applicat
 HTTP/1.1 401 Unauthorized
 {"detail":"Not authenticated"}
 ```
+
+![POST /ask-logistics no token -> 401](../screenshots/d4-01-ask-logistics-401-no-token.png)
+
+## 4. `pytest tests/test_agent_endpoint.py -v` — 3 offline tests
+
+![pytest tests/test_agent_endpoint.py -v, 3 passed](../screenshots/d4-04-pytest-agent-endpoint-3-passed.png)

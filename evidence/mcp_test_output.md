@@ -37,6 +37,8 @@ tests/test_mcp_tools.py::test_every_tool_call_logs_one_line PASSED       [100%]
 ============================= 12 passed in 0.44s ==============================
 ```
 
+![pytest tests/test_mcp_tools.py -v, 12 passed](../screenshots/d3-01-pytest-mcp-12-passed.png)
+
 ## Deliberate invalid calls and their instructive error responses
 
 Three of the tools were called with intentionally bad input; each returns
@@ -67,6 +69,8 @@ request_reorder("C01", "amoxicillin", 9999)
 2026-09-17 01:03:41,293 tool=request_reorder clinic=C01 item=vitamins units=10
 2026-09-17 01:03:41,294 resource=clinics://directory
 ```
+
+![logs/mcp.log, one line per tool call](../screenshots/d3-02-mcp-log-one-line-per-call.png)
 
 ## Manual verification with the real protocol (optional, supplementary)
 
