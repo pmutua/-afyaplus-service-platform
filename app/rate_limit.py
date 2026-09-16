@@ -9,7 +9,7 @@ import time
 
 from fastapi import HTTPException
 
-WINDOW_SECONDS = 60
+WINDOW_SECONDS = 30  # tightened from 60: a burst-abuse report showed a full minute was too forgiving
 MAX_REQUESTS = 5
 _counters: dict[str, list[float]] = {}
 
