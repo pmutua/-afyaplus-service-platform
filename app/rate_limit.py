@@ -10,7 +10,7 @@ import time
 from fastapi import HTTPException
 
 WINDOW_SECONDS = 60
-MAX_REQUESTS = 5
+MAX_REQUESTS = 10  # raised from 5: coordinators triaging a queue of patients hit the old limit mid-shift
 _counters: dict[str, list[float]] = {}
 
 
