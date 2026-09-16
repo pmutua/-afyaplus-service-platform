@@ -5,6 +5,35 @@ Reconstructing the multi-tool request from `evidence/agent_transcript.md`
 ETA from Kisumu Central Clinic to the nearest one that needs it?"*,
 `trace_id = 775c6e6e`.
 
+## The trace as a sequence diagram
+
+```mermaid
+sequenceDiagram
+    participant C as Client (mercy)
+    participant API as FastAPI (/ask-logistics)
+    participant Agent as agent_service.py
+    participant AI as OpenAI gpt-4o-mini
+    participant MCP as logistics_mcp.py (stdio)
+
+    C->>API: POST /ask-logistics — trace_id=775c6e6e generated
+    Agent->>MCP: 01:07:48.187 list_tools()
+    Agent->>AI: 01:07:50.022 call 1
+    AI-->>Agent: call check_stock(amoxicillin)
+    Agent->>MCP: 01:07:50.969 check_stock(amoxicillin)
+    MCP-->>Agent: C02=8 units, C04=0 units
+    Agent->>AI: 01:07:51.941 call 2
+    AI-->>Agent: call get_delivery_eta(C01,C02)
+    Agent->>MCP: 01:07:52.898 get_delivery_eta(C01,C02)
+    MCP-->>Agent: 16.5 km / 25 min
+    Agent->>AI: 01:07:54.291 call 3
+    AI-->>Agent: call get_delivery_eta(C01,C04)
+    Agent->>MCP: 01:07:55.284 get_delivery_eta(C01,C04)
+    MCP-->>Agent: 59.3 km / 89 min
+    Agent->>AI: 01:07:57.480 call 4 — synthesise answer
+    Agent-->>API: 01:07:57.495 trace=775c6e6e complete (11390ms total)
+    API-->>C: 200 {answer, trace_id}
+```
+
 ## How the trace is threaded
 
 `app/main.py`'s `ask_logistics()` generates `trace_id` at the door

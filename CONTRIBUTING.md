@@ -56,6 +56,15 @@ If that command doesn't show the code actually running, the release
 process is broken and nothing else in this document can be trusted until
 it's fixed.
 
+The same gitflow shape, as seen on GitHub after pushing every branch and
+the tag:
+
+![GitHub branches dropdown: main, develop, feature/*](screenshots/d5-04-github-branches.png)
+
+![GitHub Insights -> Network graph of the merge structure](screenshots/d5-05-github-network-graph.png)
+
+![GitHub Tags page showing v1.0.0](screenshots/d5-06-github-tag.png)
+
 ## When a merge conflict appears
 
 1. Read both sides of every `<<<<<<<` / `=======` / `>>>>>>>` block and
