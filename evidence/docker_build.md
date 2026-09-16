@@ -22,6 +22,8 @@ $ docker build -t afyaplus-platform:1.0.0 .
 
 First build: ~108s total, almost all of it the `pip install` layer.
 
+![docker build, full cold-build log](../screenshots/d2-01-docker-build-full.png)
+
 ## Cache-friendly layer order, proven
 
 `requirements-api.txt` is copied and installed *before* `app/` and
@@ -42,6 +44,8 @@ real    0m2.310s
 108s -> 2.3s: only the two `COPY` layers re-ran; the `pip install` layer
 was reused byte-for-byte.
 
+![docker build after a code-only edit, CACHED pip layer](../screenshots/d2-03-docker-build-cache-hit.png)
+
 ## Image size
 
 ```
@@ -55,6 +59,8 @@ of the 400MB disk figure comes from. `python:3.12-slim` plus the
 langchain/langgraph/mcp dependency stack this platform needs is
 unavoidably heavier than a bare FastAPI-only image.)
 
+![docker images, final image size](../screenshots/d2-02-docker-images-size.png)
+
 ## Runtime secret injection, never baked in
 
 The image is built with no `.env` in the build context (see
@@ -66,6 +72,8 @@ $ docker run --rm afyaplus-platform:1.0.0 python -c "import os; print('JWT_SECRE
 JWT_SECRET in image env: None
 ```
 
+![docker run with no env file, JWT_SECRET prints None](../screenshots/d2-04-no-secret-baked-in.png)
+
 Running it for real, secrets injected at `docker run` time:
 
 ```
@@ -73,7 +81,11 @@ $ docker run -d --name afyaplus-platform-test -p 8001:8000 --env-file .env afyap
 
 $ curl -s http://127.0.0.1:8001/health
 {"service":"afyaplus-service-platform","version":"1.0.0","status":"ok"}
+```
 
+![containerised GET /health -> 200](../screenshots/d2-05-container-health.png)
+
+```
 $ curl -i -X POST http://127.0.0.1:8001/triage -H 'Content-Type: application/json' \
     -d '{"patient_message":"I feel unwell","county":"Kisumu"}'
 HTTP/1.1 401 Unauthorized
@@ -85,6 +97,8 @@ $ curl -s -X POST http://127.0.0.1:8001/triage -H 'Content-Type: application/jso
     -H "Authorization: Bearer $TOKEN" -d '{"patient_message":"I have a mild fever","county":"Kisii"}'
 {"urgency":"medium","advice":"Monitor your temperature and rest. Stay hydrated and consider seeking medical advice if it persists or worsens.","handled_for":"mercy","model_used":"gpt-4o-mini"}
 ```
+
+![containerised POST /triage -> 200, real gpt-4o-mini call](../screenshots/d2-06-container-triage-real-call.png)
 
 A real `gpt-4o-mini` call succeeded from inside the container, proving
 `OPENAI_API_KEY` was correctly injected via `--env-file .env` at runtime.

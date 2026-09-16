@@ -15,18 +15,28 @@ lines.
 
 ## The graph
 
+```mermaid
+%%{init: { 'gitGraph': { 'mainBranchName': 'develop' } } }%%
+gitGraph
+   commit id: "51541a4-merge-containerisation"
+   branch feature/rate-limit-tuning
+   commit id: "ee9eafd-raise-cap-to-10-per-min"
+   checkout develop
+   branch feature/stricter-window
+   commit id: "5acb2c3-tighten-window-to-30s"
+   checkout develop
+   merge feature/rate-limit-tuning id: "59fd7cf-clean-merge"
+   merge feature/stricter-window id: "95a393f-CONFLICT-resolved" tag: "conflict"
 ```
-*   95a393f Merge feature/stricter-window into develop
-|\
-| * 5acb2c3 feat(rate-limit): tighten window to 30 seconds
-* |   59fd7cf Merge feature/rate-limit-tuning into develop
-|\ \
-| |/
-|/|
-| * ee9eafd feat(rate-limit): raise per-user request cap to 10/minute
-|/
-*   51541a4 Merge feature/containerisation into develop
-```
+
+Both feature branches were cut from the same commit (`51541a4`) on
+`develop`. `feature/rate-limit-tuning` merged in cleanly first
+(`59fd7cf`); merging `feature/stricter-window` second (`95a393f`) hit a
+real conflict because both branches touched the same two lines in
+`app/rate_limit.py`. See `screenshots/d5-01-git-log-graph-gitflow.png` for
+the real `git log --oneline --graph --all` output this diagram mirrors,
+and `screenshots/d5-02-resolved-merge-conflict-commit.png` for the
+`git show 95a393f --stat` output below.
 
 ## The conflict, as git reported it
 
@@ -90,6 +100,8 @@ $ pytest tests/ -q
 23 passed in 4.54s
 ```
 
+![pytest tests/ -v, full suite 23 passed](../screenshots/d5-03-full-suite-23-passed.png)
+
 ## The merge commit
 
 ```
@@ -111,3 +123,7 @@ Author: Philip Mutua <pmutua@live.com>
  app/rate_limit.py | 10 ++++++++++
  1 file changed, 10 insertions(+)
 ```
+
+![git show 95a393f --stat, the resolved merge conflict commit](../screenshots/d5-02-resolved-merge-conflict-commit.png)
+
+![git log --oneline --graph --all, the full gitflow shape this conflict sits in](../screenshots/d5-01-git-log-graph-gitflow.png)
