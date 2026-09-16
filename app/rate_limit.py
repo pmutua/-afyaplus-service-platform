@@ -9,6 +9,16 @@ import time
 
 from fastapi import HTTPException
 
+# Conflict resolution (feature/rate-limit-tuning x feature/stricter-window):
+# both branches touched these two lines for different, legitimate reasons.
+# Taking "theirs" (WINDOW_SECONDS=30, MAX_REQUESTS=5) wholesale would have
+# been wrong even though it merges cleanly: halving the window while
+# keeping the same count DOUBLES the effective per-minute rate (5 req /
+# 30s = 10/min) -- the opposite of the burst-abuse fix it was meant to be.
+# Kept the 60-second window and the coordinator-workflow branch's raised
+# cap; the abuse-report concern needs a real fix (burst detection within
+# the window, not a smaller window) and is tracked separately rather than
+# folded in here as a silently-wrong number.
 WINDOW_SECONDS = 60
 MAX_REQUESTS = 10  # raised from 5: coordinators triaging a queue of patients hit the old limit mid-shift
 _counters: dict[str, list[float]] = {}
