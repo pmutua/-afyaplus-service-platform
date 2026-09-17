@@ -13,6 +13,17 @@ substitutions.
 
 [Presentation Link](https://docs.google.com/presentation/d/e/2PACX-1vTZqLxHcAIy8gvmRVFoHS1BUpWJi0Y3NtCmN94aFzYj2NvVV-D4wtn33bNMGobPmFyqr9HJ3uo4zVow/pub?start=false&loop=false&delayms=3000)
 
+## Technologies Used
+
+- **Language and runtime:** Python 3.12
+- **API:** FastAPI, Uvicorn, Pydantic
+- **Authentication and security:** JWT with PyJWT, password hashing with bcrypt, environment configuration with `python-dotenv`
+- **AI and orchestration:** OpenAI `gpt-4o-mini`, LangChain, LangGraph, and the Model Context Protocol (MCP)
+- **Testing:** pytest
+- **Containerisation:** Docker with the `python:3.12-slim` base image
+- **Deployment:** Kubernetes manifest in `deployment.yaml`
+- **Documentation and diagrams:** Markdown and Mermaid
+
 ## Architecture
 
 ```mermaid
