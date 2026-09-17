@@ -4,15 +4,14 @@ A production-shaped AI service platform for AfyaPlus's clinic network:
 a JWT-secured FastAPI triage service wrapping a real `gpt-4o-mini` call,
 containerised on a slim base image, an MCP server exposing clinic
 logistics tools, and a LangChain agent over those tools behind its own
-authenticated endpoint. Built for the Week 6 capstone, reusing the exact
-architecture from this cohort's Week 6 Monday/Tuesday/Thursday labs
-(`../afyaplus/week6_{monday,tuesday,thursday}`), re-implemented from
-scratch in this standalone repo.
+authenticated endpoint.
 
 No fallback paths were needed: Docker Desktop and a real `OPENAI_API_KEY`
 were both available, so every piece of evidence in `evidence/` is a real
 run against the real running service — no stub-model or Inspector-only
 substitutions.
+
+[Presentation Link](https://docs.google.com/presentation/d/e/2PACX-1vTZqLxHcAIy8gvmRVFoHS1BUpWJi0Y3NtCmN94aFzYj2NvVV-D4wtn33bNMGobPmFyqr9HJ3uo4zVow/pub?start=false&loop=false&delayms=3000)
 
 ## Architecture
 
